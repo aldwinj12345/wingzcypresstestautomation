@@ -13,6 +13,7 @@
     "build": "echo 'No build needed for this example' "
   },
   "devDependencies": {
-    "cypress": "^14.0.3"
+    "cypress": "^14.0.3",
+    "serve": "^14.2.4"
   }
 }
