@@ -172,6 +172,6 @@ beforeEach('Launch Wingz app Login Page', ()=>{
           .and('not.be.checked')
 
       })//orgin ends here
-    })//test block ends here
+    })//test block ends here.
 
   })
