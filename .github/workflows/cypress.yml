@@ -1,0 +1,44 @@
+name: Cypress Tests
+
+on: [push]
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false # Don't stop all jobs if one fails
+      matrix:
+        browser: [chrome, firefox, edge] # Browsers to test on
+        #group: [1, 2, 3] # Number of groups (adjust as needed)
+        
+    container:
+      image: cypress/included:latest # The pre-built Cypress Docker image
+
+    
+    steps:
+      - uses: actions/checkout@v3
+      - name: Cache Node modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+      - name: Install dependencies
+        run: npm ci
+      - name: Run Cypress tests
+        uses: cypress-io/github-action@v6
+        with:
+          start: npm run start # Start the static server
+      - name: Upload Cypress screenshots on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-screenshots-${{ matrix.browser }} # Add browser name to the artifact name
+          path: cypress/screenshots
+      - name: Upload Cypress videos on success and failure
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-videos-${{ matrix.browser }} # Add browser name to the artifact name
+          path: cypress/videos
